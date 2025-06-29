@@ -8,7 +8,6 @@ std::string getCurrentTimestamp() {
     time_t now = time(0);
     char* dt = ctime(&now);
     std::string result(dt);
-    // Ukloni newline sa kraja
     if (!result.empty() && result.back() == '\n') result.pop_back();
     return result;
 }
@@ -19,6 +18,15 @@ int main() {
 
     std::cout << "Duzina lozinke: ";
     std::cin >> length;
+
+    // 🔐 Validacija duzine lozinke
+    if (length < 8) {
+        std::cout << "❌ Sifra je manja od 8 znakova.\n";
+        return 1;
+    } else if (length >= 15) {
+        std::cout << "❌ Sifra mora biti unutar 8-15 znakova.\n";
+        return 1;
+    }
 
     std::cout << "Koristiti velika slova? (1/0): "; std::cin >> upper;
     std::cout << "Koristiti mala slova? (1/0): "; std::cin >> lower;
@@ -38,7 +46,7 @@ int main() {
     std::cout << "\nGenerisana lozinka: " << password << std::endl;
     std::cout << "Entropija: " << entropy << " bita" << std::endl;
 
-    std::string wordlistPath = "~usr/share/wordlists/rockyou.txt";
+    std::string wordlistPath = "~/usr/share/wordlists/rockyou.txt";
     bool isBlacklisted = isPasswordBlacklisted(password, wordlistPath);
 
     if (isBlacklisted) {
@@ -48,7 +56,7 @@ int main() {
     }
 
     // 📝 Spremi u passwords5.txt
-    std::ofstream outFile("passwords5.txt", std::ios::app); // dodaj na kraj
+    std::ofstream outFile("passwords5.txt", std::ios::app);
     if (outFile.is_open()) {
         outFile << "---------------------------\n";
         outFile << "Vrijeme: " << getCurrentTimestamp() << "\n";
